@@ -1,0 +1,17 @@
+{
+    "name": "iblues\/larfree-permission",
+    "description": "larfree的权限补充包",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Blues",
+            "email": "i@iblues.name"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Iblues\\LarfreePermission\\": "src"
+        }
+    }
+}
