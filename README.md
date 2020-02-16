@@ -9,6 +9,10 @@
 $ composer require iblues/larfree-permission -vvv
 ```
 
+基于laravel-permission开发. 可以参考
+
+https://docs.spatie.be/laravel-permission/v3/introduction/
+
 ## Usage
 
 TODO

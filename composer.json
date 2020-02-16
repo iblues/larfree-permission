@@ -8,10 +8,29 @@
             "email": "i@iblues.name"
         }
     ],
-    "require": {},
+    "require": {
+        "spatie/laravel-permission": "^3.3",
+        "iblues/larfree": "dev-dev"
+    },
     "autoload": {
         "psr-4": {
-            "Iblues\\LarfreePermission\\": "src"
+            "LarfreePermission\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LarfreePermission\\ServiceProvider"
+            ]
+        }
+    },
+    "repositories": {
+        "0": {
+            "type": "path",
+            "url": "/Users/lanyang/Desktop/www/larfree",
+            "options": {
+                "symlink": true
+            }
         }
     }
 }
