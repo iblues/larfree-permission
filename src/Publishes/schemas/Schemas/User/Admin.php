@@ -33,6 +33,18 @@ return [
                 'name'=>'{{name}}'
             ],
         ],
+        'roles' => [
+            'name' => '角色',
+            'tip' => '',
+            'type' => 'select',
+            'link' => [],
+            'multi'=>true,
+            'component_param'=>[
+                'key'=>'id',
+                'name'=>'{{name}}',
+                'api'=>'/permission/roles'//指定api地址.
+            ],
+        ],
         'comment' => [
             'name' => '备注',
             'tip' => '',

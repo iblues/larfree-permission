@@ -23,14 +23,5 @@
                 "LarfreePermission\\ServiceProvider"
             ]
         }
-    },
-    "repositories": {
-        "0": {
-            "type": "path",
-            "url": "/Users/lanyang/Desktop/www/larfree",
-            "options": {
-                "symlink": true
-            }
-        }
     }
 }

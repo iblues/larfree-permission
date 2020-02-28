@@ -21,8 +21,11 @@ class CreatePermissionTables extends Migration
             $table->string('name');
             $table->string('guard_name');
             $table->string('type')->default('');
+            $table->unsignedInteger('target_id')->default(0);
+            $table->string('target_type')->default('');
             $table->index('type');
             $table->timestamps();
+            $table->unique(['name','guard_name']);
         });
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {

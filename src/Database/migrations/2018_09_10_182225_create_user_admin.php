@@ -16,12 +16,13 @@ class CreateUserAdmin extends Migration
     {
         Schema::create('user_admin', function (Blueprint $table) {
             $table->increments('id')->comment('id');//唯一编号
-            $table->string('name')->comment('范围');
-            $table->string('user_id')->comment('绑定用户');
-            $table->text('comment')->comment('备注');
+            $table->string('name')->default('')->comment('名称');
+            $table->bigInteger('user_id')->unsigned()->default(0)->comment('绑定用户')->unique();
+            $table->text('comment')->nullable()->comment('备注');
             $table->boolean('status')->comment('有效')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 

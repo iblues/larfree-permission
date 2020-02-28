@@ -6,6 +6,11 @@
 return [
     'detail' => [
         'table' => [
+            'search' => [
+                'name',
+                'guard_name',
+                'type',
+            ],
             'fields' => [
                 'id',
                 'name',

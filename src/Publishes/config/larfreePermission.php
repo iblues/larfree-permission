@@ -19,5 +19,14 @@ return [
         //角色模型
         'role' => LarfreePermission\Models\Permission\PermissionRoles::class,
 
+        'user' => \App\Models\Common\CommonUser::class,
+        //guard
+
+    ],
+    'table_names'=>[
+        'user'=>'common_user',
+    ],
+    'guard' => [
+        'admin' => 'api',
     ]
 ];

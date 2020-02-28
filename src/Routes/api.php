@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 
 
-
 Route::group(['middleware' => ['api.auth','api'], 'prefix' => 'api'], function () {
 
     //图片压缩

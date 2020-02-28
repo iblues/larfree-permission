@@ -4,6 +4,7 @@
  * @author blues
  */
 namespace LarfreePermission\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Larfree\Models\Api;
 
 use Larfree\Models\ApiUser;
@@ -13,4 +14,5 @@ class UserAdmin extends ApiUser
 {
     use HasRoles;
     protected $guard_name = 'admin';
+
 }

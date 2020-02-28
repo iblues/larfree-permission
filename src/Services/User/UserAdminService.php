@@ -15,7 +15,7 @@ class UserAdminService extends SimpleLarfreeService
     public $model;
     public function __construct()
     {
-        $model = config('larfree_permission_model',UserAdmin::class);
+        $model = config('larfreePermission.models.userAdmin',UserAdmin::class);
         $this->model = app($model);
         parent::__construct();
     }
