@@ -20,11 +20,12 @@ class CreatePermissionTables extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('guard_name');
-            $table->string('type')->default('');
+            $table->timestamps();
+
+            //以下为新增
+            $table->string('type')->default('')->comment('api,nav,button 区分权限类型')->index();
             $table->unsignedInteger('target_id')->default(0);
             $table->string('target_type')->default('');
-            $table->index('type');
-            $table->timestamps();
             $table->unique(['name','guard_name']);
         });
 

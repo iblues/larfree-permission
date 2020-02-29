@@ -78,10 +78,13 @@ class PermissionPermissionsService extends SimpleLarfreeService
                 'target_type' => $adminNavModel,
                 'guard_name' => $guardName,
                 'target_id' => $nav->id,
+                'type'=>'nav',
                 'comment' => $nav->name
             ];
             static::make()->addOne($insert);
         }
+        //清理缓存
+        static::make()->model->forgetCachedPermissions();
     }
 
 
