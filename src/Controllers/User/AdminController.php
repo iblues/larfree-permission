@@ -60,7 +60,8 @@ class AdminController extends Controller
      * @throws \Exception
      * @author Blues
      * @ATU\Api(
-     *     @ATU\Request({"page":1})
+     *     @ATU\Request({"page":1}),
+     *     @ATU\Response({"data":{{"id":true}}})
      * )
      */
     public function index(Request $request)
@@ -122,7 +123,7 @@ class AdminController extends Controller
      *     title="user_id:1的应该不能重复添加",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
      *     @ATU\Request({"user_id":1,"name":"测试","roles":{1}}),
-     *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加"} ),
+     *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加","code":true} ),
      * )
      */
     public function update(Request $request, $id)
