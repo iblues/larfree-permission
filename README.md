@@ -13,6 +13,9 @@ $ composer require iblues/larfree-permission -vvv
 
 https://docs.spatie.be/laravel-permission/v3/introduction/
 
+.env
+SUPER_ADMIN_ID=1
+
 ## Usage
 
 TODO

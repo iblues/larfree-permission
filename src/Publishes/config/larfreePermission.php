@@ -23,10 +23,13 @@ return [
         //guard
 
     ],
-    'table_names'=>[
-        'user'=>'common_user',
+    'table_names' => [
+        'user' => 'common_user',
     ],
     'guard' => [
         'admin' => 'api',
-    ]
+    ],
+    //超级管理员只能是一个人
+    'super_admin' => env('SUPER_ADMIN_ID', '1,2'),
+
 ];

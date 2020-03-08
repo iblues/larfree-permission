@@ -23,13 +23,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         //监听
         Event::listen('permission.*', function ($eventName, array $data) {
             if ($eventName == 'permission.filter_nav') {
+
                 //根据权限判断
                 $guard = config('larfreePermission.guard.admin', 'api');
                 $user = \Auth::guard($guard)->user();
+
                 $user || apiError('当前登录用户不存在', [], 401);
 
                 $model = config('larfreePermission.models.userAdmin');
                 $admin = $model::where('user_id', $user->id)->first();
+
                 $admin || apiError('您并无管理员权限', [], 401);
 
                 $nav = PermissionPermissionsService::checkNavPermission($data['nav'], $data['model'], $admin);
@@ -48,10 +51,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $path . '/Publishes/config/larfreePermission.php', 'larfreePermission'
         );
 
-        // 貌似没起效果 要检查
-        $this->mergeConfigFrom(
-            $path . '/Publishes/config/permission.php', 'permission'
-        );
 
         //路由
         $this->loadRoutesFrom($path . '/Routes/api.php');
