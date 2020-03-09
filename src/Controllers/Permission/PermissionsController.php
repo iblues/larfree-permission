@@ -4,6 +4,7 @@
  * @author blues
  */
 namespace LarfreePermission\Controllers\Permission;
+use Iblues\AnnotationTestUnit\Annotation as ATU;
 use Illuminate\Http\Request;
 use Larfree\Controllers\ApisController as Controller;
 use LarfreePermission\Services\Permission\PermissionPermissionsService;
@@ -17,5 +18,15 @@ class PermissionsController extends Controller
     {
         $this->service = $service;
         parent::__construct();
+    }
+
+    /**
+     * @author Blues
+     * @ATU\Api(
+     *     @ATU\Now(),
+     * )
+     */
+    public function ApiTree(){
+        return $this->service->getApiTree();
     }
 }

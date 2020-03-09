@@ -13,6 +13,7 @@ Route::group(['middleware' => ['api.auth','api'], 'prefix' => 'api'], function (
         Route::apiResource('permission/roles', LarfreePermission\Controllers\Permission\RolesController::class,['adv'=>true]);
         Route::apiResource('permission/permissions', LarfreePermission\Controllers\Permission\PermissionsController::class);
         Route::get('permission/roles/nav/tree', LarfreePermission\Controllers\Permission\RolesController::class.'@navTree');
+        Route::get('permission/permission/api/tree', LarfreePermission\Controllers\Permission\PermissionsController::class.'@apiTree');
     });
 });
 

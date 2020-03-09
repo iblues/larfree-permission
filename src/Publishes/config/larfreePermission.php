@@ -29,7 +29,10 @@ return [
     'guard' => [
         'admin' => 'api',
     ],
+
+    'filter_admin_url'=>env('PERMISSION_ADMIN_URL', 'api/admin'),
+    'filter_admin_module_url'=>env('PERMISSION_ADMIN_URL', '/^([^\/]*)?\/([^\/]*)?(\/)?(.*)?/i'),
     //超级管理员只能是一个人
-    'super_admin' => env('SUPER_ADMIN_ID', '1,2'),
+    'super_admin' => env('PERMISSION_SUPER_ADMIN_ID', '1,2'),
 
 ];

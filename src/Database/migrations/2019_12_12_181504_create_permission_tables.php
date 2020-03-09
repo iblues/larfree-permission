@@ -26,6 +26,7 @@ class CreatePermissionTables extends Migration
             $table->string('type')->default('')->comment('api,nav,button 区分权限类型')->index();
             $table->unsignedInteger('target_id')->default(0);
             $table->string('target_type')->default('');
+            $table->string('comment')->default('')->comment('显示名字');
             $table->unique(['name','guard_name']);
         });
 

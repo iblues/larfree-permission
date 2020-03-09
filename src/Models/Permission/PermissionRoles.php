@@ -26,13 +26,14 @@ class PermissionRoles extends Role
     /**
      * 在添加前,先简单和生成权限
      * 保存和添加的回调
-     * @param $data
-     * @throws \Larfree\Exceptions\ApiException
+     * @param Model $data
+     * @throws \Exception
      */
     public function beforeSave(Model &$data)
     {
 
         if (isset($data->nav)) {
+            //传过来的是nav id,转换为permission id.然后返回permission id进行保存
             $nav = $data->getAttribute('nav');
             if (!is_array($nav)) {
                 unset($data->nav);
@@ -49,7 +50,7 @@ class PermissionRoles extends Role
 
                 $guard_name = $data->getAttribute('guard_name', 'admin');
                 //检查有没有没有生成权限的菜单
-                PermissionPermissionsService::createAllAdminNavPermission($guard_name);
+                PermissionPermissionsService::make()->createAllAdminNavPermission($guard_name);
 
                 //把菜单id 转换成菜单id.
                 $permission = app($permissionModel)->select('id')->where('target_type', $adminNavModel)->whereIn('target_id', $nav)->get();
@@ -58,7 +59,16 @@ class PermissionRoles extends Role
                 $data->setAttribute('nav', $permissionId);
             }
         }
+
+
+        // api模型.
+        if(isset($data->api)){
+            PermissionPermissionsService::make()->createAllAdminApiPermission($guard_name);
+        }
     }
+
+
+
 
 
     public function afterSave(Model $data)
@@ -69,25 +79,25 @@ class PermissionRoles extends Role
 
     /**
      * 菜单粒度的权限控制
-     * @author Blues
      * @return BelongsToMany
      * @override
+     * @author Blues
      */
     public function nav(): BelongsToMany
     {
-        return $this->permissions()->where('target_type', Config('larfreePermission.models.adminNav'));
+        return $this->permissions()->where('type', 'nav');
     }
 
 
     /**
      * api粒度的权限控制
-     * @author Blues
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      * @override
+     * @author Blues
      */
     public function api(): BelongsToMany
     {
-        return $this->permissions()->where('target_type', 'api');
+        return $this->permissions()->where('type', 'api');
     }
 
 

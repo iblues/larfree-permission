@@ -43,7 +43,7 @@ class RolesController extends Controller
      * @throws \Exception
      * @author Blues
      * @ATU\Api(
-     *     @ATU\Request({"guard_name":"admin","name":"测试","nav":{1}}),
+     *     @ATU\Request({"guard_name":"admin","name":"测试","nav":{1},"api":{}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_permissions",{"target_id":1}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_roles",{"name":"测试"}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_role_has_permissions",{"role_id":@ATU\GetResponse("data.id")}})
@@ -63,7 +63,7 @@ class RolesController extends Controller
      *
      * @ATU\Api(
      *     path="latest",
-     *     @ATU\Request({"name":"测试2","guard_name":"api","nav":{1},"api":{}}),
+     *     @ATU\Request({"name":"测试2","guard_name":"admin","nav":{1},"api":{}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_permissions",{"target_id":1}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_roles",{"name":"测试2"}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_role_has_permissions",{"role_id":@ATU\GetResponse("data.id")}})
