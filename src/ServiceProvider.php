@@ -10,6 +10,8 @@ namespace LarfreePermission;
 
 use App\Models\Common\CommonUser;
 use Illuminate\Support\Facades\Event;
+use Larfree\Models\Admin\AdminNav;
+use LarfreePermission\Models\User\UserAdmin;
 use LarfreePermission\Services\Permission\PermissionPermissionsService;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -25,7 +27,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             //根据权限判断
             $user = \Auth::guard(config('larfreePermission.guard.admin', 'api'))->user();
             $model = config('larfreePermission.models.userAdmin');
-            $admin = $model::where('user_id', $user->id)->first();
+            $admin = $model::where('user_id', $user->id)->where('state', 1)->first();
             $admin || apiError('您并无管理员权限', [], 401);
 
             //检查导航
@@ -39,6 +41,23 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 return PermissionPermissionsService::make()->checkApiSchemas($data['schemas'], $admin);
             }
         });
+
+//        Event::listen('larfree.install', function ($eventName, array $data) {
+//
+//        });
+        Event::listen('larfree.install*', function ($eventName, array $data) {
+            switch ($eventName) {
+                case 'larfree.install':
+                    $this->createAdminNav();
+                    //创建菜单.
+                    break;
+                case 'larfree.install.admin':
+                    $this->createAdmin($data['user']);
+                    break;
+            }
+//            dump($data);
+        });
+
 
         $path = dirname(__DIR__) . '/src';
 
@@ -56,6 +75,47 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             $path . '/Publishes/Schemas' => schemas_path(),
         ], 'larfree-permission');
+    }
+
+    /**
+     * 创建管理员
+     * @param $user
+     * @author Blues
+     *
+     */
+    protected function createAdmin($user)
+    {
+        UserAdmin::query()->firstOrCreate(
+            ['user_id' => $user->id],
+            ['user_id', $user->id, 'name' => 'Super Admin']
+        );
+    }
+
+    /**
+     * 创建后台菜单
+     * @author Blues
+     *
+     */
+    protected function createAdminNav()
+    {
+        $parent = AdminNav::query()->firstOrCreate(
+            ['url' => '/permission'],
+            ['url' => '/permission', 'name' => '后台管理', 'state' => 1, 'component' => 'curd/table', 'class' => 'setting']
+        );
+
+        AdminNav::query()->firstOrCreate(
+            ['url' => '/curd/user.admin'],
+            ['url' => '/curd/user.admin', 'parent_id' => $parent->id, 'name' => '管理账号', 'state' => 1, 'component' => 'curd/table', 'class' => 'user']
+        );
+        AdminNav::query()->firstOrCreate(
+            ['url' => '/curd/permission.roles'],
+            ['url' => '/curd/permission.roles', 'parent_id' => $parent->id, 'name' => '角色设置', 'state' => 1, 'component' => 'curd/table', 'class' => 'setting']
+        );
+        AdminNav::query()->firstOrCreate(
+            ['url' => '/curd/permission.permissions'],
+            ['url' => '/curd/permission.permissions', 'parent_id' => $parent->id, 'name' => '权限明细', 'state' => 1, 'component' => 'curd/table', 'class' => 'setting']
+        );
+
     }
 
 }

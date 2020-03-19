@@ -27,6 +27,7 @@ class CreatePermissionTables extends Migration
             $table->unsignedInteger('target_id')->default(0);
             $table->string('target_type')->default('');
             $table->string('comment')->default('')->comment('显示名字');
+            $table->tinyInteger('state')->default(1)->comment('状态');
             $table->unique(['name','guard_name']);
         });
 

@@ -19,7 +19,7 @@ class CreateUserAdmin extends Migration
             $table->string('name')->default('')->comment('名称');
             $table->bigInteger('user_id')->unsigned()->default(0)->comment('绑定用户')->unique();
             $table->text('comment')->nullable()->comment('备注');
-            $table->boolean('status')->comment('有效')->default(0);
+            $table->boolean('state')->comment('有效')->default(1);
             $table->timestamps();
             $table->softDeletes();
 

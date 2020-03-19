@@ -23,7 +23,6 @@ class PermissionsController extends Controller
     /**
      * @author Blues
      * @ATU\Api(
-     *     @ATU\Now(),
      * )
      */
     public function ApiTree(){

@@ -10,7 +10,7 @@ return [
         ],
         'name' => [
             'name' => '姓名',
-            'tip' => '',
+            'tip' => '非登录账户,仅用于记录',
             'type' => 'text',
             'sql_type' => 'varchar(191)',
         ],
@@ -25,25 +25,26 @@ return [
                     'user_id',
                     'id',
                 ],
-                'field' => ['id', 'name'],
-                'select' => ['id', 'name'],//后期作废
+                'field' => ['id', 'name','email']
             ],
-            'component_param'=>[
-                'key'=>'id',
-                'name'=>'{{name}}'
+            'component_param' => [
+                'key' => 'id',
+                'name' => '{{name}} ( {{email}} )'
             ],
+            'tip'=>'用于第三方登录等'
         ],
         'roles' => [
             'name' => '角色',
             'tip' => '',
             'type' => 'select',
             'link' => [],
-            'multi'=>true,
-            'component_param'=>[
-                'key'=>'id',
-                'name'=>'{{name}}',
-                'api'=>'/permission/roles'//指定api地址.
+            'multi' => true,
+            'component_param' => [
+                'key' => 'id',
+                'name' => '{{id}}:{{name}}',
+                'api' => '/permission/roles'//指定api地址.
             ],
+            'tip'=>'用于权限设置',
         ],
         'comment' => [
             'name' => '备注',
@@ -51,10 +52,11 @@ return [
             'type' => 'text',
             'sql_type' => 'text',
         ],
-        'status' => [
+        'state' => [
             'name' => '开启',
             'tip' => '',
             'type' => 'checkbox',
+            'default' => 1,
             'sql_type' => 'tinyint(1)',
         ],
         'created_at' => [
