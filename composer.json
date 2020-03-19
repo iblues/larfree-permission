@@ -9,8 +9,7 @@
         }
     ],
     "require": {
-        "spatie/laravel-permission": "^3.3",
-        "iblues/larfree": "dev-dev"
+        "spatie/laravel-permission": "^3.3"
     },
     "autoload": {
         "psr-4": {
