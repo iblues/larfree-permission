@@ -11,6 +11,7 @@ namespace LarfreePermission;
 use App\Models\Common\CommonUser;
 use Illuminate\Support\Facades\Event;
 use Larfree\Models\Admin\AdminNav;
+use LarfreePermission\Models\Permission\PermissionRoles;
 use LarfreePermission\Models\User\UserAdmin;
 use LarfreePermission\Services\Permission\PermissionPermissionsService;
 
@@ -85,9 +86,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected function createAdmin($user)
     {
+        PermissionRoles::query()->firstOrCreate(
+            ['id' => 1],
+            ['id', 1, 'name' => 'Super Admin']
+        );
         UserAdmin::query()->firstOrCreate(
             ['user_id' => $user->id],
-            ['user_id', $user->id, 'name' => 'Super Admin']
+            ['user_id', $user->id, 'name' => 'Super Admin', ['role' => 1]]
         );
     }
 
