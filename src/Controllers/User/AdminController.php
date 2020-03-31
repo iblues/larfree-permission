@@ -61,11 +61,10 @@ class AdminController extends Controller
      * @throws \Exception
      * @author Blues
      * @ATU\Api(
-     *     @ATU\Before(@ATU\Tag("add.user.admin")),
+     *     @ATU\Before(@ATU\Tag("addUserAdmin")),
      *     @ATU\Now(),
-     *     @ATU\Request({"page":1,"@sort":"user.name.desc","user.phone|name":"$%333%"}),
+     *     @ATU\Request({"page":1,"@sort":"user.name.desc","user.phone|name":@ATU\GetParam("addUserAdmin.response.data.name")}),
      *     @ATU\Response({"data":{{"id":true}}}),
-     *     @ATU\Assert("assertDatabaseHas",{"common_user",{"email":@ATU\GetParam("userAdmin.data.user.email")}}),
      * )
      */
     public function index(Request $request)
@@ -88,7 +87,7 @@ class AdminController extends Controller
      * )
      * @ATU\Api(
      *     title="先删除user_id:1的 避免因为重复添加不进去",
-     *     @ATU\Tag("add.user.admin"),
+     *     @ATU\Tag("addUserAdmin"),
      *     @ATU\Before(@ATU\Tag("add.user.admin2")),
      *     @ATU\Before("delete",{ UserAdmin::class,{"user_id":1}}),
      *     @ATU\Request({"name":"测试2333","user.email":"i@iblues.com2","user.phone":"13888888881","user.password":"1234","roles":{1}}),
@@ -98,8 +97,7 @@ class AdminController extends Controller
      *     @ATU\Assert("assertDatabaseHas",{"user_admin",{"user_id":@ATU\GetResponse("data.user_id")}}),
      *     @ATU\Assert("assertDatabaseHas",{"common_user",{"email":@ATU\GetRequest("user.email")}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_model_has_roles",{"role_id":1,"model_type":UserAdmin::class,"model_id":@ATU\GetResponse("data.id")}}),
-     *     @ATU\Assert("assertLog",{"新增管理员信息"}),
-     *     @ATU\After("setParam",{"userAdmin",@ATU\GetResponse()}),
+     *     @ATU\Assert("assertLog",{"新增管理员信息"})
      *
      * )
      */
