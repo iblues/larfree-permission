@@ -6,16 +6,41 @@
 return [
     'detail' => [
         'table' => [
+            'config' => [
+                'action' => [
+                    'password' => [
+                        'type' => 'primary',
+                        'html' => '密码',
+                        'action' => '/',
+                        'url' => '/dialog/edit/common.user/{{user_id}}/password',
+                        'api' => 'PUT:///common.user',
+                    ],
+                ],
+            ],
             'search' => [
                 'name',
-                'user_id',
+                'user.phone' => [
+                    'name' => '手机号',
+                    'type' => 'phone',
+                ],
+                'user.email' => [
+                    'name' => '邮箱',
+                    'type' => 'email',
+                ],
                 'roles',
                 'state',
             ],
             'fields' => [
                 'id',
                 'name',
-                'user_id',
+                'user.phone' => [
+                    'name' => '手机号',
+                    'type' => 'phone',
+                ],
+                'user.email' => [
+                    'name' => '邮箱',
+                    'type' => 'email',
+                ],
                 'roles',
                 'state',
                 'created_at',
@@ -24,19 +49,21 @@ return [
         'add' => [
             'fields' => [
                 'name',
-                'user_id'=>[
-                    'tip'=>'可不填,会创建新用户',
+                'user.email' => [
+                    'name' => '邮箱',
+                    'type' => 'email',
+                    'tip' => '用于登录',
                 ],
-                'email'=>[
-                    'name'=>'邮箱',
-                    'type'=>'email',
-                    'tip'=>'用于登录',
+                'user.phone' => [
+                    'name' => '手机号',
+                    'type' => 'email',
+                    'tip' => '会优先以手机号去匹配用户',
                 ],
-                'password'=>[
-                    'name'=>'密码',
-                    'type'=>'password',
-                    'require'=>'require',
-                    'tip'=>'此密码和前台用户密码通用'
+                'user.password' => [
+                    'name' => '密码',
+                    'type' => 'password',
+                    'require' => 'require',
+                    'tip' => '此密码和前台用户密码通用'
                 ],
                 'roles',
                 'comment',
@@ -46,17 +73,8 @@ return [
         'edit' => [
             'fields' => [
                 'name',
-                'user_id',
-                'user.email'=>[
-                    'name'=>'修改邮箱',
-                    'type'=>'email',
-                    'tip'=>'用于登录',
-                ],
-                'user.password'=>[
-                    'name'=>'密码',
-                    'type'=>'password',
-                    'require'=>'require',
-                    'tip'=>'此密码和前台用户密码通用'
+                'user_id' => [
+                    'tip' => '邮箱/手机号请前往账号中心修改',
                 ],
                 'roles',
                 'comment',

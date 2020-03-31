@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Larfree\Controllers\AdminApisController as Controller;
 use LarfreePermission\Services\User\UserAdminService;
 use LarfreePermission\Models\User\UserAdmin;
+use OpenApi\Annotations as OA;
 
 
 class AdminController extends Controller
@@ -21,13 +22,13 @@ class AdminController extends Controller
         'store' => [
             '*',
             'user_id' => [
-                'rule' => ['unique:user_admin,user_id'=>'该用户已添加,请勿重复添加']
+                'rule' => ['unique:user_admin,user_id' => '该用户已添加,请勿重复添加']
             ]
         ],
         'update' => [
             '*',
             'user_id' => [
-                'rule' => ['unique:user_admin,user_id'=>'该用户已添加,请勿重复添加']
+                'rule' => ['unique:user_admin,user_id' => '该用户已添加,请勿重复添加']
             ]
         ]
     ];
@@ -60,8 +61,11 @@ class AdminController extends Controller
      * @throws \Exception
      * @author Blues
      * @ATU\Api(
-     *     @ATU\Request({"page":1}),
-     *     @ATU\Response({"data":{{"id":true}}})
+     *     @ATU\Before(@ATU\Tag("add.user.admin")),
+     *     @ATU\Now(),
+     *     @ATU\Request({"page":1,"@sort":"user.name.desc","user.phone|name":"$%333%"}),
+     *     @ATU\Response({"data":{{"id":true}}}),
+     *     @ATU\Assert("assertDatabaseHas",{"common_user",{"email":@ATU\GetParam("userAdmin.data.user.email")}}),
      * )
      */
     public function index(Request $request)
@@ -78,25 +82,30 @@ class AdminController extends Controller
      * @ATU\Api(
      *     title="user_id:1的应该不能重复添加",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
-     *     @ATU\Request({"user_id":1,"name":"测试","roles":{1}}),
+     *     @ATU\Request({"user_id":1,"name":"测试123","roles":{1},"user.email":"i@Iblues.name","user.password":"123"}),
      *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加"} ),
-     * )
      *
+     * )
      * @ATU\Api(
      *     title="先删除user_id:1的 避免因为重复添加不进去",
+     *     @ATU\Tag("add.user.admin"),
+     *     @ATU\Before(@ATU\Tag("add.user.admin2")),
      *     @ATU\Before("delete",{ UserAdmin::class,{"user_id":1}}),
-     *     @ATU\Request({"user_id":1,"name":"测试","roles":{1}}),
+     *     @ATU\Request({"name":"测试2333","user.email":"i@iblues.com2","user.phone":"13888888881","user.password":"1234","roles":{1}}),
      *     @ATU\Response({
      *      "data":{"roles":{{"id":1}},"user_id":@ATU\GetRequest("user_id"),"user":true,"name":@ATU\GetRequest("name")}
      *     }),
-     *     @ATU\Assert("assertDatabaseHas",{"user_admin",{"user_id":@ATU\GetRequest("user_id")}}),
-     *     @ATU\Assert("assertDatabaseHas",{"common_user",{"id":@ATU\GetRequest("user_id")}}),
-     *     @ATU\Assert("assertDatabaseHas",{"permission_model_has_roles",{"role_id":1,"model_type":UserAdmin::class,"model_id":@ATU\GetResponse("data.id")}})
+     *     @ATU\Assert("assertDatabaseHas",{"user_admin",{"user_id":@ATU\GetResponse("data.user_id")}}),
+     *     @ATU\Assert("assertDatabaseHas",{"common_user",{"email":@ATU\GetRequest("user.email")}}),
+     *     @ATU\Assert("assertDatabaseHas",{"permission_model_has_roles",{"role_id":1,"model_type":UserAdmin::class,"model_id":@ATU\GetResponse("data.id")}}),
+     *     @ATU\Assert("assertLog",{"新增管理员信息"}),
+     *     @ATU\After("setParam",{"userAdmin",@ATU\GetResponse()}),
+     *
      * )
      */
     public function store(Request $request)
     {
-        return parent::store($request);
+        return $this->service->addAdminAndUser($request->all());
     }
 
     /**
@@ -110,19 +119,19 @@ class AdminController extends Controller
      *     path="oldest",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
      *     @ATU\Before("create",{ CommonUser::class,{"id":2},{"id":2} }),
-     *
-     *     @ATU\Request({"user_id":2,"name":"测试","roles":{1}}),
+     *     @ATU\Request({"user_id":2,"name":"测试2","roles":{1}}),
      *     @ATU\Response({
      *      "data":{"roles":{{"id":1}},"user_id":@ATU\GetRequest("user_id"),"user":true,"name":@ATU\GetRequest("name")}
      *     }),
      *     @ATU\Assert("assertDatabaseHas",{"user_admin",{"user_id":@ATU\GetRequest("user_id")}}),
+     *     @ATU\Assert("assertDatabaseHas",{"user_admin",{"name":@ATU\GetRequest("name")}}),
      *     @ATU\Assert("assertDatabaseHas",{"permission_model_has_roles",{"role_id":1,"model_type":UserAdmin::class,"model_id":@ATU\GetResponse("data.id")}})
      * )
      *
-     *  @ATU\Api(
+     * @ATU\Api(
      *     title="user_id:1的应该不能重复添加",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
-     *     @ATU\Request({"user_id":1,"name":"测试","roles":{1}}),
+     *     @ATU\Request({"user_id":1,"namer":"测试","user.email":"i@Iblues.name","user.password":"123","roles":{1}}),
      *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加","code":true} ),
      * )
      */
