@@ -37,6 +37,10 @@ class UserAdminService extends SimpleLarfreeService
                 'password' => $data['user.password'] ?? null,
             ]
         );
+        if($exist = $this->model->with('user')->where('user_id',$user->id)->first()){
+            $tip= '账号:'.$exist->user->phone.' 已经绑定账号:'.$exist->name;
+            apiError($tip,['phone'=>$tip]);
+        }
         $data['user_id'] = $user->id;
         return $this->addOne($data);
     }

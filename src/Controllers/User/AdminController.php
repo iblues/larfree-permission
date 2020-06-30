@@ -28,7 +28,7 @@ class AdminController extends Controller
         'update' => [
             '*',
             'user_id' => [
-                'rule' => ['unique:user_admin,user_id' => '该用户已添加,请勿重复添加']
+                'rule' => ['unique:user_admin,user_id,id,admin' => '该用户已添加,请勿重复添加']
             ]
         ]
     ];
@@ -62,7 +62,6 @@ class AdminController extends Controller
      * @author Blues
      * @ATU\Api(
      *     @ATU\Before(@ATU\Tag("addUserAdmin")),
-     *     @ATU\Now(),
      *     @ATU\Request({"page":1,"@sort":"user.name.desc","user.phone|name":@ATU\GetParam("addUserAdmin.response.data.name")}),
      *     @ATU\Response({"data":{{"id":true}}}),
      * )
@@ -77,19 +76,17 @@ class AdminController extends Controller
      * @return mixed
      * @throws \Exception
      * @author Blues
-     *
      * @ATU\Api(
      *     title="user_id:1的应该不能重复添加",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
      *     @ATU\Request({"user_id":1,"name":"测试123","roles":{1},"user.email":"i@Iblues.name","user.password":"123"}),
      *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加"} ),
-     *
      * )
      * @ATU\Api(
      *     title="先删除user_id:1的 避免因为重复添加不进去",
      *     @ATU\Tag("addUserAdmin"),
-     *     @ATU\Before(@ATU\Tag("add.user.admin2")),
      *     @ATU\Before("delete",{ UserAdmin::class,{"user_id":1}}),
+     *     @ATU\Before("delete",{ CommonUser::class,{"phone":13888888881}}),
      *     @ATU\Request({"name":"测试2333","user.email":"i@iblues.com2","user.phone":"13888888881","user.password":"1234","roles":{1}}),
      *     @ATU\Response({
      *      "data":{"roles":{{"id":1}},"user_id":@ATU\GetRequest("user_id"),"user":true,"name":@ATU\GetRequest("name")}
@@ -127,9 +124,17 @@ class AdminController extends Controller
      * )
      *
      * @ATU\Api(
+     *     path=@ATU\GetParam("addUserAdmin.response.data.id"),
+     *     title="同id的唯一索引测试",
+     *     @ATU\Before(@ATU\Tag("addUserAdmin")),
+     *     @ATU\Request({"user_id":@ATU\GetParam("addUserAdmin.response.data.user_id"),"namer":"测试","roles":{1}})
+     * )
+     *
+     * @ATU\Api(
+     *     path="latest",
      *     title="user_id:1的应该不能重复添加",
      *     @ATU\Before("create",{ UserAdmin::class,{"user_id":1},{"user_id":1} }),
-     *     @ATU\Request({"user_id":1,"namer":"测试","user.email":"i@Iblues.name","user.password":"123","roles":{1}}),
+     *     @ATU\Request({"user_id":1,"namer":"测试","roles":{1}}),
      *     @ATU\Response(422, {"msg":"该用户已添加,请勿重复添加","code":true} ),
      * )
      */
