@@ -32,7 +32,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
      * @param $navs
      * @param $model
      * @param $user
-     * @param string $guardName
+     * @param  string  $guardName
      * @return array
      * @throws \Exception
      * @author Blues
@@ -54,7 +54,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
         $newNavs = [];
         foreach ($navs as $key => $nav) {
             try {
-                $flag = $user->hasPermissionTo($model . '-' . $nav['id'], $guardName);
+                $flag = $user->hasPermissionTo($model.'-'.$nav['id'], $guardName);
                 //如果他没有权限 , 先检查下他的下级有没有权限.
                 if (!$flag) {
                     $children = $NavCollect->where('parent_id', $nav['id']);
@@ -68,14 +68,13 @@ class PermissionPermissionsService extends SimpleLarfreeService
             if ($flag) {
                 $newNavs[] = $nav;
             }
-
         }
         return $newNavs;
     }
 
     /**
      * 检查是否有不存在的权限
-     * @param string $guardName
+     * @param  string  $guardName
      * @throws \Exception
      * @author Blues
      */
@@ -90,7 +89,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
 
         foreach ($navs as $nav) {
             $insert = [
-                'name' => $adminNavModel . '-' . $nav->id,
+                'name' => $adminNavModel.'-'.$nav->id,
                 'target_type' => $adminNavModel,
                 'guard_name' => $guardName,
                 'target_id' => $nav->id,
@@ -139,8 +138,8 @@ class PermissionPermissionsService extends SimpleLarfreeService
             $method = strtoupper($route->methods[0]);
             $as = @$route->action['controller'];
             if (substr($url, 0, strlen($adminPrefix)) == $adminPrefix) {
-                if($url = substr($url, strlen($adminPrefix)+1)) {
-                    $api = $method . ':///' . $url;
+                if ($url = substr($url, strlen($adminPrefix) + 1)) {
+                    $api = $method.':///'.$url;
                     $datas[] = ['path' => $as, 'method' => $method, 'url' => $url, 'api' => $api];
                 }
             }
@@ -180,7 +179,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
             }
             if ($match) {
                 $comment = [];
-                $model = ($match[1][0] ?? 'noGroup') . "." . ($match[2][0] ?? '');
+                $model = ($match[1][0] ?? 'noGroup').".".($match[2][0] ?? '');
                 $comment[] = $lang[$model] ?? $model;
                 $comment[] = $action;
                 $comment = implode(' : ', $comment);
@@ -193,8 +192,8 @@ class PermissionPermissionsService extends SimpleLarfreeService
                 'comment' => $comment,
                 'state' => $state,
             ];
-
-            if (!$this->model->where('name', $api)->first()) {
+            //没有创建过的再创建
+            if (!$this->model->where('name', $api)->where('guard_name', $guardName)->first()) {
                 $this->model->query()->create($data);
             }
         }
@@ -220,7 +219,8 @@ class PermissionPermissionsService extends SimpleLarfreeService
      */
     public function getApiTree($guardName = 'admin')
     {
-        $apis = $this->model->where('type', 'api')->orderBy('comment', 'desc')->where('guard_name', $guardName)->where('state', 1)->get();
+        $apis = $this->model->where('type', 'api')->orderBy('comment', 'desc')->where('guard_name',
+            $guardName)->where('state', 1)->get();
         $return = [];
         foreach ($apis as $api) {
             $module = explode(':', $api['comment']);
@@ -236,7 +236,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
 
     public function checkApiPermission($api, $user, $guardName = 'admin')
     {
-        if(!is_string($api)){
+        if (!is_string($api)) {
             return true;
         }
         $api = $this->apiToPermissionApi($api);
@@ -267,7 +267,6 @@ class PermissionPermissionsService extends SimpleLarfreeService
         //递归检查数字, 如果有api字段就要检查.
         if (is_array($schemas)) {
             foreach ($schemas as $key => $schema) {
-
                 $schemas[$key] = $this->checkApiSchemas($schema, $user, $guardName);
                 if (isset($schema['api'])) {
                     //检查api在不在
