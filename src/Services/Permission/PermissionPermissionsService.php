@@ -195,7 +195,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
             ];
 
             if (!$this->model->where('name', $api)->first()) {
-                $this->model->create($data);
+                $this->model->query()->create($data);
             }
         }
     }
