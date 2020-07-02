@@ -11,6 +11,7 @@ namespace LarfreePermission;
 use App\Models\Common\CommonUser;
 use Illuminate\Support\Facades\Event;
 use Larfree\Models\Admin\AdminNav;
+use LarfreePermission\Console\RenameApiPermission;
 use LarfreePermission\Models\Permission\PermissionRoles;
 use LarfreePermission\Models\User\UserAdmin;
 use LarfreePermission\Services\Permission\PermissionPermissionsService;
@@ -27,6 +28,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Event::listen('permission.*', function ($eventName, array $data) {
             //根据权限判断
             $user = \Auth::guard(config('larfreePermission.guard.admin', 'api'))->user();
+            //如果没用户,先都直接返回
+            if(!$user){
+                return $data;
+            }
             $model = config('larfreePermission.models.userAdmin');
             $admin = $model::where('user_id', $user->id)->where('state', 1)->first();
             $admin || apiError('您并无管理员权限', [], 401);
@@ -69,6 +74,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(
             $path . '/Publishes/config/larfreePermission.php', 'larfreePermission'
         );
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                RenameApiPermission::class
+            ]);
+        }
 
 
         //路由
