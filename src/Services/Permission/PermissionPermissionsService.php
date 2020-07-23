@@ -250,9 +250,9 @@ class PermissionPermissionsService extends SimpleLarfreeService
         try {
             $flag = $user->hasPermissionTo($api, $guardName);
         } catch (PermissionDoesNotExist $e) {
-            //权限未创建. 代表空权限的.
-            $this->createAllAdminApiPermission($guardName);
-            $flag = false;
+            //权限未创建. 先通过
+//            $this->createAllAdminApiPermission($guardName);
+            $flag = true;
         }
         return $flag;
     }
@@ -278,6 +278,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
         if (is_array($schemas)) {
             foreach ($schemas as $key => $schema) {
                 $schemas[$key] = $this->checkApiSchemas($schema, $user, $guardName);
+
                 if (isset($schema['api'])) {
                     //检查api在不在
                     $flag = $this->checkApiPermission($schema['api'], $user, $guardName);
