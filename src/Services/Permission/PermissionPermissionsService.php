@@ -64,6 +64,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
                     $children = $NavCollect->where('parent_id', $nav['id']);
 
                     $flag = $this->checkNavPermission($children, $user, $guardName);
+                    $flag = count($flag)>0?true:false;
                 }
             } catch (PermissionDoesNotExist $e) {
                 //权限未创建
