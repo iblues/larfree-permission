@@ -219,8 +219,9 @@ class PermissionPermissionsService extends SimpleLarfreeService
 
     /**
      * 获取树状的Api列表, 前端选择用
+     * @param  string  $guardName
+     * @return array
      * @author Blues
-     *
      */
     public function getApiTree($guardName = 'admin')
     {
@@ -257,8 +258,11 @@ class PermissionPermissionsService extends SimpleLarfreeService
 
     /**
      * 检查有没有api权限
+     * @param $schemas
+     * @param $user
+     * @param  string  $guardName
+     * @return array
      * @author Blues
-     *
      */
     public function checkApiSchemas($schemas, $user, $guardName = 'admin')
     {
