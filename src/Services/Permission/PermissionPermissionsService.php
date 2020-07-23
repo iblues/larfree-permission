@@ -39,7 +39,9 @@ class PermissionPermissionsService extends SimpleLarfreeService
      */
     public function checkNavPermission($navs, $user, $guardName = 'admin')
     {
-        if(!$navs || !$navs->first())
+        if(!method_exists($navs,'first'))
+            return [];
+        if(!$navs->first())
             return [];
         $model = get_class($navs->first());
         $superUserId = config('larfreePermission.super_admin', 0);
@@ -60,7 +62,8 @@ class PermissionPermissionsService extends SimpleLarfreeService
                 //如果他没有权限 , 先检查下他的下级有没有权限.
                 if (!$flag) {
                     $children = $NavCollect->where('parent_id', $nav['id']);
-                    $flag = $this->checkNavPermission($children->toArray(), $model, $user, $guardName);
+
+                    $flag = $this->checkNavPermission($children, $user, $guardName);
                 }
             } catch (PermissionDoesNotExist $e) {
                 //权限未创建
