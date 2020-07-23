@@ -39,7 +39,9 @@ class PermissionPermissionsService extends SimpleLarfreeService
      */
     public function checkNavPermission($navs, $user, $guardName = 'admin')
     {
-        $model = get_class($navs);
+        if(!$navs || !$navs->first())
+            return [];
+        $model = get_class($navs->first());
         $superUserId = config('larfreePermission.super_admin', 0);
         $superUserId = explode(',', $superUserId);
         //是超级管理员
@@ -69,7 +71,7 @@ class PermissionPermissionsService extends SimpleLarfreeService
                 $newNavs[] = $nav;
             }
         }
-        return $newNavs;
+        return collect($newNavs);
     }
 
     /**
