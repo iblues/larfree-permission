@@ -103,7 +103,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
         UserAdmin::query()->firstOrCreate(
             ['user_id' => $user->id],
-            ['user_id' => $user->id, 'name' => 'Super Admin', ['role' => 1]]
+            ['user_id' => $user->id, 'name' => 'Super Admin', 'role' => [1]]
         );
     }
 
