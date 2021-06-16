@@ -63,7 +63,7 @@ class PermissionRoles extends Role
 
         // api模型.
         if(isset($data->api)){
-            PermissionPermissionsService::make()->createAllAdminApiPermission($guard_name);
+            PermissionPermissionsService::make()->createAllAdminApiPermission($guard_name??'admin');
         }
     }
 
